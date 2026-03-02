@@ -2,12 +2,12 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import { ThemeProvider } from '@/components/theme-provider';
-import './i18n';
-import './index.css';
+import '@/i18n';
+import '@/index.css';
 
-import Landing from './pages';
-import Login from './pages/login';
-import Register from './pages/register';
+import Landing from '@/pages';
+import Login from '@/pages/login';
+import Register from '@/pages/register';
 
 const router = createBrowserRouter([
   {
