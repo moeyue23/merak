@@ -6,12 +6,18 @@ repos:
         exclude: ^(pnpm-lock.yaml|Cargo.lock)$
   - repo: local
     hooks:
-      - id: biome-check
-        name: biome check
-        entry: pnpm biome check --write --no-errors-on-unmatched
+      - id: eslint-fix
+        name: eslint fix
+        entry: pnpm eslint --fix
         language: system
         types: [text]
-        files: "\\.(jsx?|tsx?|c(js|ts)|m(js|ts)|d\\.(ts|cts|mts)|jsonc?|css)$"
+        files: "\\.(jsx?|tsx?|c(js|ts)|m(js|ts)|d\\.(ts|cts|mts))$"
+      - id: prettier-write
+        name: prettier write
+        entry: pnpm prettier --write
+        language: system
+        types: [text]
+        files: "\\.(jsx?|tsx?|c(js|ts)|m(js|ts)|d\\.(ts|cts|mts)|jsonc?|css|yaml|md)$"
       - id: cargo-format
         name: cargo format
         entry: cargo fmt --
