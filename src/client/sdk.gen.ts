@@ -47,7 +47,7 @@ export type Options<
  * Login with username or email and return access tokens
  */
 export const login = <ThrowOnError extends boolean = false>(
-  options: Options<LoginData, ThrowOnError>,
+  options: Options<LoginData, ThrowOnError>
 ) =>
   (options.client ?? client).post<LoginResponses, LoginErrors, ThrowOnError>({
     responseType: 'json',
@@ -65,15 +65,13 @@ export const login = <ThrowOnError extends boolean = false>(
  * Client should delete stored tokens (server uses stateless JWT, no additional processing needed)
  */
 export const logout = <ThrowOnError extends boolean = false>(
-  options?: Options<LogoutData, ThrowOnError>,
+  options?: Options<LogoutData, ThrowOnError>
 ) =>
-  (options?.client ?? client).post<LogoutResponses, LogoutErrors, ThrowOnError>(
-    {
-      responseType: 'json',
-      url: '/auth/logout',
-      ...options,
-    },
-  );
+  (options?.client ?? client).post<LogoutResponses, LogoutErrors, ThrowOnError>({
+    responseType: 'json',
+    url: '/auth/logout',
+    ...options,
+  });
 
 /**
  * Get current user information
@@ -81,7 +79,7 @@ export const logout = <ThrowOnError extends boolean = false>(
  * Requires a valid access token in the request header: `Authorization: Bearer <token>`
  */
 export const getMe = <ThrowOnError extends boolean = false>(
-  options?: Options<GetMeData, ThrowOnError>,
+  options?: Options<GetMeData, ThrowOnError>
 ) =>
   (options?.client ?? client).get<GetMeResponses, GetMeErrors, ThrowOnError>({
     responseType: 'json',
@@ -95,13 +93,9 @@ export const getMe = <ThrowOnError extends boolean = false>(
  * Use a refresh token to get new access token and refresh token
  */
 export const refreshToken = <ThrowOnError extends boolean = false>(
-  options: Options<RefreshTokenData, ThrowOnError>,
+  options: Options<RefreshTokenData, ThrowOnError>
 ) =>
-  (options.client ?? client).post<
-    RefreshTokenResponses,
-    RefreshTokenErrors,
-    ThrowOnError
-  >({
+  (options.client ?? client).post<RefreshTokenResponses, RefreshTokenErrors, ThrowOnError>({
     responseType: 'json',
     url: '/auth/refresh',
     ...options,
@@ -117,13 +111,9 @@ export const refreshToken = <ThrowOnError extends boolean = false>(
  * Create a new user account and return access tokens
  */
 export const register = <ThrowOnError extends boolean = false>(
-  options: Options<RegisterData, ThrowOnError>,
+  options: Options<RegisterData, ThrowOnError>
 ) =>
-  (options.client ?? client).post<
-    RegisterResponses,
-    RegisterErrors,
-    ThrowOnError
-  >({
+  (options.client ?? client).post<RegisterResponses, RegisterErrors, ThrowOnError>({
     responseType: 'json',
     url: '/auth/register',
     ...options,
@@ -134,7 +124,7 @@ export const register = <ThrowOnError extends boolean = false>(
   });
 
 export const hello = <ThrowOnError extends boolean = false>(
-  options?: Options<HelloData, ThrowOnError>,
+  options?: Options<HelloData, ThrowOnError>
 ) =>
   (options?.client ?? client).get<HelloResponses, unknown, ThrowOnError>({
     responseType: 'json',
@@ -143,7 +133,7 @@ export const hello = <ThrowOnError extends boolean = false>(
   });
 
 export const hello2 = <ThrowOnError extends boolean = false>(
-  options?: Options<Hello2Data, ThrowOnError>,
+  options?: Options<Hello2Data, ThrowOnError>
 ) =>
   (options?.client ?? client).head<Hello2Responses, unknown, ThrowOnError>({
     responseType: 'json',

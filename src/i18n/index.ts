@@ -5,8 +5,10 @@ import { initReactI18next } from 'react-i18next';
 // Auto language detection (disabled for now)
 
 // Auto-import all JSON files under en/ and zh/
-const enModules: Record<string, { default: Record<string, unknown> }> =
-  import.meta.glob('./en/*.json', { eager: true });
+const enModules: Record<string, { default: Record<string, unknown> }> = import.meta.glob(
+  './en/*.json',
+  { eager: true }
+);
 const zhModules = import.meta.glob('./zh/*.json', { eager: true }) as Record<
   string,
   { default: Record<string, unknown> }
@@ -18,13 +20,13 @@ const resources = {
     Object.entries(enModules).map(([path, mod]) => {
       const ns = path.split('/').pop()?.replace('.json', '') ?? path;
       return [ns, mod.default];
-    }),
+    })
   ),
   zh: Object.fromEntries(
     Object.entries(zhModules).map(([path, mod]) => {
       const ns = path.split('/').pop()?.replace('.json', '') ?? path;
       return [ns, mod.default];
-    }),
+    })
   ),
 };
 

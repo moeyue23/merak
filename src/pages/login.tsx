@@ -45,14 +45,9 @@ export default function Login() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
+          <CardDescription>Enter your email below to login to your account</CardDescription>
           <CardAction>
-            <Link
-              to="/register"
-              className="text-sm font-medium text-foreground hover:underline"
-            >
+            <Link to="/register" className="text-sm font-medium text-foreground hover:underline">
               Sign Up
             </Link>
           </CardAction>
@@ -61,10 +56,7 @@ export default function Login() {
         <CardContent>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label
-                htmlFor="login-email"
-                className="text-sm font-medium text-foreground"
-              >
+              <Label htmlFor="login-email" className="text-sm font-medium text-foreground">
                 Email
               </Label>
               <Input
@@ -72,16 +64,13 @@ export default function Login() {
                 className="bg-background"
                 placeholder="m@example.com"
                 value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
+                onChange={e => setIdentifier(e.target.value)}
               />
             </div>
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label
-                  htmlFor="login-password"
-                  className="text-sm font-medium text-foreground"
-                >
+                <Label htmlFor="login-password" className="text-sm font-medium text-foreground">
                   Password
                 </Label>
                 <span className="text-sm text-muted-foreground cursor-pointer">
@@ -94,18 +83,13 @@ export default function Login() {
                 className="bg-background"
                 placeholder="••••••••"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
               />
             </div>
 
             {error && <p className="text-sm text-destructive">{error}</p>}
 
-            <Button
-              type="button"
-              onClick={handleSubmit}
-              disabled={loading}
-              className="w-full"
-            >
+            <Button type="button" onClick={handleSubmit} disabled={loading} className="w-full">
               {loading ? 'Logging in...' : 'Login'}
             </Button>
           </div>

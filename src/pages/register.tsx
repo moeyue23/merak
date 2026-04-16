@@ -48,14 +48,9 @@ export default function Register() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Create an account</CardTitle>
-          <CardDescription>
-            Enter your information to create an account
-          </CardDescription>
+          <CardDescription>Enter your information to create an account</CardDescription>
           <CardAction>
-            <Link
-              to="/"
-              className="text-sm font-medium text-foreground hover:underline"
-            >
+            <Link to="/" className="text-sm font-medium text-foreground hover:underline">
               Log in
             </Link>
           </CardAction>
@@ -64,40 +59,31 @@ export default function Register() {
         <CardContent>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label
-                htmlFor="register-username"
-                className="text-sm font-medium text-foreground"
-              >
+              <Label htmlFor="register-username" className="text-sm font-medium text-foreground">
                 Username
               </Label>
               <Input
                 id="register-username"
                 className="bg-background"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={e => setUsername(e.target.value)}
               />
             </div>
 
             <div className="space-y-2">
-              <Label
-                htmlFor="email"
-                className="text-sm font-medium text-foreground"
-              >
+              <Label htmlFor="email" className="text-sm font-medium text-foreground">
                 Email
               </Label>
               <Input
                 id="email"
                 className="bg-background"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
               />
             </div>
 
             <div className="space-y-2">
-              <Label
-                htmlFor="register-password"
-                className="text-sm font-medium text-foreground"
-              >
+              <Label htmlFor="register-password" className="text-sm font-medium text-foreground">
                 Password
               </Label>
               <Input
@@ -105,18 +91,13 @@ export default function Register() {
                 type="password"
                 className="bg-background"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
               />
             </div>
 
             {error && <p className="text-sm text-destructive">{error}</p>}
 
-            <Button
-              type="button"
-              onClick={handleSubmit}
-              disabled={loading}
-              className="w-full"
-            >
+            <Button type="button" onClick={handleSubmit} disabled={loading} className="w-full">
               {loading ? 'Registering...' : 'Register'}
             </Button>
           </div>

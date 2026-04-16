@@ -6,8 +6,7 @@ import { useLocale } from '@/hooks/useLocale';
 import { GithubIcon, MerakIcon, MerakLogo } from '@/icon/icon';
 import { cn } from '@/lib/utils';
 
-interface NavActionButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+interface NavActionButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 
 export function NavActionButton({ className, ...props }: NavActionButtonProps) {
   return (
@@ -33,9 +32,7 @@ export default function LandingPage() {
               <MerakIcon className="w-5 h-5 text-primary-foreground" />
             </div>
 
-            <span className="font-semibold text-lg tracking-tight">
-              {t('brandName')}
-            </span>
+            <span className="font-semibold text-lg tracking-tight">{t('brandName')}</span>
           </div>
 
           <div className="flex items-center gap-3">
@@ -48,18 +45,14 @@ export default function LandingPage() {
 
             <NavActionButton
               onClick={toggle}
-              aria-label={
-                lang === 'en' ? 'Switch to 中文' : 'Switch to English'
-              }
+              aria-label={lang === 'en' ? 'Switch to 中文' : 'Switch to English'}
             >
               {label}
             </NavActionButton>
 
             <NavActionButton
               aria-label="GitHub repository"
-              onClick={() =>
-                window.open('https://github.com/noctisynth/merak', '_blank')
-              }
+              onClick={() => window.open('https://github.com/noctisynth/merak', '_blank')}
             >
               <GithubIcon className="w-5 h-5" />
             </NavActionButton>
@@ -81,9 +74,7 @@ export default function LandingPage() {
           {t('titleSuffix')}
         </h1>
 
-        <p className="mt-6 text-lg text-muted-foreground max-w-2xl">
-          {t('desc')}
-        </p>
+        <p className="mt-6 text-lg text-muted-foreground max-w-2xl">{t('desc')}</p>
 
         <div className="flex gap-4 mt-10">
           <Link

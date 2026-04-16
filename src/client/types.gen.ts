@@ -248,8 +248,7 @@ export type RefreshTokenResponses = {
   200: RefreshTokenResponse;
 };
 
-export type RefreshTokenResponse2 =
-  RefreshTokenResponses[keyof RefreshTokenResponses];
+export type RefreshTokenResponse2 = RefreshTokenResponses[keyof RefreshTokenResponses];
 
 export type RegisterData = {
   body: RegisterRequest;
