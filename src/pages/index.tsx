@@ -2,9 +2,9 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { useTheme } from '@/components/theme-provider';
 import { Button } from '@/components/ui/button';
+import { useLocale } from '@/hooks/useLocale';
+import { GithubIcon, MerakIcon, MerakLogo } from '@/icon/icon';
 import { cn } from '@/lib/utils';
-import { useLocale } from '../hooks/useLocale';
-import { GithubIcon, MerakIcon, MerakLogo } from '../icon/icon';
 
 interface NavActionButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
