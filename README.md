@@ -5,7 +5,7 @@
 ## 技术栈
 
 - **前端**: React 19 + Vite + TypeScript + Tailwind CSS v4
-- **后端**: Rust (Axum) + SurrealDB
+- **后端**: Go (Chi) + SQLite
 - **包管理器**: pnpm
 
 ## 启动流程
@@ -16,21 +16,18 @@
 # 安装前端依赖
 pnpm install
 
-# 安装 Rust 依赖 (后端)
-cargo build
+# 安装 Go 依赖 (后端)
+cd backend
+go mod tidy
 ```
 
-### 2. 配置环境变量
+### 2. 配置环境变量（可选）
 
-后端需要环境变量配置，在 `crates/merak/` 目录下创建 `.env` 文件。参考以下配置项：
+后端支持环境变量配置，在 `backend/` 目录下创建 `.env` 文件：
 
 ```bash
-# SurrealDB 配置
-SURREAL_URL=ws://127.0.0.1:5070    # 数据库连接地址
-SURREAL_NS=test                     # 命名空间
-SURREAL_DB=test                     # 数据库名
-SURREAL_USER=root                   # 用户名
-SURREAL_PASS=root                   # 密码
+# 服务端端口
+PORT=8080
 
 # JWT 密钥配置（生产环境必须修改）
 JWT_ACCESS_SECRET=your_access_secret_here
@@ -39,7 +36,7 @@ JWT_ACCESS_EXP_SECONDS=900          # Access Token 有效期（秒），默认15
 JWT_REFRESH_EXP_SECONDS=604800      # Refresh Token 有效期（秒），默认7天
 ```
 
-**注意：** 如果不配置 `.env`，后端会使用默认值（见括号中的内容），但 **JWT 密钥在生产环境必须使用自定义值**。
+**注意：** 如果不配置 `.env`，后端会使用默认值，但 **JWT 密钥在生产环境必须使用自定义值**。
 
 ### 3. 启动开发服务器
 
@@ -48,8 +45,8 @@ JWT_REFRESH_EXP_SECONDS=604800      # Refresh Token 有效期（秒），默认7
 **终端 1 - 启动后端:**
 
 ```bash
-cd crates/merak
-cargo run
+cd backend
+go run main.go
 ```
 
 后端默认运行在 `http://localhost:8080`
@@ -68,8 +65,9 @@ pnpm dev
 # 构建前端
 pnpm build
 
-# 构建后端
-cargo build --release
+# 构建后端 (生成可执行文件)
+cd backend
+go build -o merak-backend main.go
 ```
 
 ## 目录结构
@@ -82,10 +80,12 @@ merak/
 │   ├── hooks/             # 自定义 React Hooks
 │   ├── layouts/           # 布局组件
 │   └── lib/               # 工具函数
-├── crates/                # Rust 后端
-│   ├── merak/             # 主服务端
-│   ├── core/              # 核心库
-│   └── macros/            # 过程宏
+├── backend/               # Go 后端
+│   ├── db/                # 数据库连接 (SQLite + GORM)
+│   ├── handlers/          # HTTP 处理器
+│   ├── models/            # 数据模型
+│   ├── services/          # 业务逻辑
+│   └── routes/            # 路由定义
 └── package.json
 ```
 
