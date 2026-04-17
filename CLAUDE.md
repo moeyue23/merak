@@ -4,11 +4,11 @@ This file guides Claude Code when working in the `merak` repository.
 
 ## Repository Overview
 
-**Primary languages:** TypeScript (React 19 + Vite) and Rust (workspace crates)
+**Primary languages:** TypeScript (React 19 + Vite) and Go (Gin + SQLite)
 
-**Package manager:** `pnpm` (see `packageManager` in `package.json`)
+**Package manager:** `pnpm` (frontend), Go modules (backend)
 
-**Build tools:** `vite`, `tsc` (project references), `cargo`
+**Build tools:** `vite`, `tsc` (project references), `go build`
 
 **Styling:** Tailwind CSS v4.x
 
@@ -16,14 +16,17 @@ This file guides Claude Code when working in the `merak` repository.
 
 - `src/` — Frontend TypeScript/React source
   - State stores go in `src/models/` (using Zustand)
-- `crates/` — Rust workspace crates
-  - `crates/merak/` — Backend server crate
-  - `crates/macros/` — Procedural macros (`merak_macros::Model`)
+- `backend/` — Go backend server (Gin + SQLite)
+  - `routes/` — HTTP handlers (REST API)
+  - `models/` — Database models (GORM)
+  - `services/` — Business logic layer
+  - `db/` — Database initialization
+  - `common/` — Shared utilities (response helpers)
 
 ### Key Files
 
-- `package.json` — Scripts: `dev`, `build`, `lint`, `preview`, `prepare`
-- `Cargo.toml` — Rust workspace configuration
+- `package.json` — Frontend scripts: `dev`, `build`, `lint`, `preview`, `prepare`
+- `backend/go.mod` — Go module definition
 - `components.json` — Shadcn component registry
 - `tsconfig.json` — Path alias `@/*` maps to `./src/*`
 
@@ -41,14 +44,13 @@ This file guides Claude Code when working in the `merak` repository.
 - Complex UI components should use `cva` for variant management
 - Simple components may use direct Tailwind classes
 
-### Rust
+### Go
 
-- Follow existing crate structure; keep workspace settings unchanged
-- All code must pass `cargo clippy` with no warnings
-- No `unsafe` code
-- HTTP handlers go in `routes/`, domain models in `models/`
-- Use `merak_macros::Model` derive for database models
-- Use `#[utoipa::path]` for OpenAPI documentation on handlers
+- Follow standard Go project layout within `backend/`
+- HTTP handlers go in `routes/`, domain models in `models/`, business logic in `services/`
+- Use GORM for database operations
+- Use `common.Response()` helper for consistent API responses
+- JWT authentication via `services/jwt.go`
 
 ### Styling
 
@@ -76,10 +78,11 @@ pnpm lint
 # Preview build
 pnpm preview
 
-# Rust
-cargo build
-cargo test
-cargo clippy
+# Backend (Go)
+cd backend
+go run main.go              # Dev server
+go build -o merak .         # Build binary
+go test ./...               # Run tests
 ```
 
 ## Adding Components
@@ -113,9 +116,3 @@ When reviewing or generating code:
 - Are UI components accessible (semantic HTML, labels)?
 - Are tests present for non-trivial logic?
 - No hard-coded secrets?
-
-## High-Risk Areas
-
-**merak-macros (`crates/macros`):** Treat as infrastructure — modify with caution, ensure backward compatibility.
-
-**Public crate APIs:** Do not make breaking changes without a migration plan.
