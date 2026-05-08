@@ -27,9 +27,10 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Briefcase, ChevronDownIcon, CircleDot, Inbox, Settings, User, Users } from 'lucide-react';
+import { Briefcase, ChevronDownIcon, CircleDot, Inbox, LogOut, User, Users } from 'lucide-react';
 import { useState } from 'react';
 import { NavLink } from 'react-router';
+import { useAuth } from '@/models/auth-context';
 
 interface SortableSubItemProps {
   item: {
@@ -94,6 +95,7 @@ function SortableSubItem({ item }: SortableSubItemProps) {
 }
 
 export function AppSidebar() {
+  const { user, logout } = useAuth();
   const [workspaceOpen, setWorkspaceOpen] = useState(true);
   const [teamsOpen, setTeamsOpen] = useState(true);
   const [workspaceItems, setWorkspaceItems] = useState([
@@ -243,8 +245,10 @@ export function AppSidebar() {
       <SidebarFooter>
         <SidebarMenuButton className="w-full">
           <User className="h-4 w-4" />
-          <span>userName</span>
-          <Settings className="ml-auto h-4 w-4" />
+          <span>{user?.username ?? 'Guest'}</span>
+          <button onClick={logout} className="ml-auto cursor-pointer" title="Log out">
+            <LogOut className="h-4 w-4" />
+          </button>
         </SidebarMenuButton>
       </SidebarFooter>
     </Sidebar>

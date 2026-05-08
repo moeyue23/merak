@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router';
-import { login } from '@/client';
+import { Link, Navigate, useNavigate } from 'react-router';
+import { useAuth } from '@/models/auth-context';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -15,26 +15,28 @@ import { Label } from '@/components/ui/label';
 
 export default function Login() {
   const navigate = useNavigate();
+  const { login, isAuthenticated } = useAuth();
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  if (isAuthenticated) {
+    return <Navigate to="/app/inbox" replace />;
+  }
 
   const handleSubmit = async () => {
     try {
       setLoading(true);
       setError('');
 
-      await login({
-        body: {
-          identifier,
-          password,
-        },
-      });
-
-      navigate('/register');
-    } catch {
-      setError('Invalid email or password');
+      await login(identifier, password);
+      navigate('/app/inbox');
+    } catch (err) {
+      const axiosError = err as { response?: { data?: { message?: string } }; message?: string };
+      const message =
+        axiosError.response?.data?.message ?? axiosError.message ?? 'Invalid email or password';
+      setError(message);
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,5 @@
 import { ThemeProvider } from '@/components/theme-provider';
+import { AuthProvider } from '@/models/auth-context';
 import '@/i18n';
 import '@/index.css';
 import { StrictMode } from 'react';
@@ -54,7 +55,9 @@ const root = document.getElementById('root') as HTMLDivElement;
 createRoot(root).render(
   <StrictMode>
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </ThemeProvider>
   </StrictMode>
 );

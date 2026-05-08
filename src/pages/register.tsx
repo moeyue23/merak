@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router';
-import { register } from '@/client';
+import { Link, Navigate, useNavigate } from 'react-router';
+import { useAuth } from '@/models/auth-context';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -15,29 +15,28 @@ import { Label } from '@/components/ui/label';
 
 export default function Register() {
   const navigate = useNavigate();
-
+  const { register, isAuthenticated } = useAuth();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  if (isAuthenticated) {
+    return <Navigate to="/app/inbox" replace />;
+  }
+
   const handleSubmit = async () => {
     try {
       setLoading(true);
       setError('');
 
-      await register({
-        body: {
-          username,
-          email,
-          password,
-        },
-      });
-
-      navigate('/login');
-    } catch {
-      setError('Sign-up failed');
+      await register(username, email, password);
+      navigate('/app/inbox');
+    } catch (err) {
+      const axiosError = err as { response?: { data?: { message?: string } }; message?: string };
+      const message = axiosError.response?.data?.message ?? axiosError.message ?? 'Sign-up failed';
+      setError(message);
     } finally {
       setLoading(false);
     }
