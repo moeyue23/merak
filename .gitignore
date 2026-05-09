@@ -16,3 +16,4 @@ db/
 
 # Logs
 *.log
+backend/data.db
