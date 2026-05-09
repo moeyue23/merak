@@ -28,7 +28,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Briefcase, ChevronDownIcon, CircleDot, Inbox, LogOut, User, Users } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { NavLink } from 'react-router';
 import { useAuth } from '@/models/auth-context';
 
@@ -94,8 +94,66 @@ function SortableSubItem({ item }: SortableSubItemProps) {
   );
 }
 
+function EditableUsername({
+  username,
+  onSave,
+}: {
+  username: string;
+  onSave: (name: string) => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [value, setValue] = useState(username);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editing) {
+      inputRef.current?.focus();
+      inputRef.current?.select();
+    }
+  }, [editing]);
+
+  const handleSave = () => {
+    const trimmed = value.trim();
+    if (trimmed && trimmed !== username) {
+      onSave(trimmed);
+    } else {
+      setValue(username);
+    }
+    setEditing(false);
+  };
+
+  if (editing) {
+    return (
+      <input
+        ref={inputRef}
+        className="flex-1 min-w-0 bg-transparent text-sm outline-2 outline-blue-500 rounded px-0.5"
+        value={value}
+        onChange={e => setValue(e.target.value)}
+        onBlur={handleSave}
+        onKeyDown={e => {
+          if (e.key === 'Enter') handleSave();
+          if (e.key === 'Escape') {
+            setValue(username);
+            setEditing(false);
+          }
+        }}
+      />
+    );
+  }
+
+  return (
+    <span
+      className="flex-1 min-w-0 text-sm truncate cursor-pointer hover:text-blue-400 transition-colors"
+      onClick={() => setEditing(true)}
+      title="Click to rename"
+    >
+      {username}
+    </span>
+  );
+}
+
 export function AppSidebar() {
-  const { user, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
   const [workspaceOpen, setWorkspaceOpen] = useState(true);
   const [teamsOpen, setTeamsOpen] = useState(true);
   const [workspaceItems, setWorkspaceItems] = useState([
@@ -244,9 +302,12 @@ export function AppSidebar() {
 
       <SidebarFooter>
         <SidebarMenuButton className="w-full">
-          <User className="h-4 w-4" />
-          <span>{user?.username ?? 'Guest'}</span>
-          <button onClick={logout} className="ml-auto cursor-pointer" title="Log out">
+          <User className="h-4 w-4 shrink-0" />
+          <EditableUsername
+            username={user?.username ?? 'Guest'}
+            onSave={name => updateUser({ username: name })}
+          />
+          <button onClick={logout} className="ml-auto cursor-pointer shrink-0" title="Log out">
             <LogOut className="h-4 w-4" />
           </button>
         </SidebarMenuButton>

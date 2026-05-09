@@ -27,6 +27,7 @@ interface AuthContextValue {
   login: (identifier: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  updateUser: (data: { username?: string; email?: string }) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -87,6 +88,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, []);
 
+  const updateUser = useCallback(async (data: { username?: string; email?: string }) => {
+    const res = await client.instance.put('/auth/me', data);
+    const body = res.data as { data: User };
+    setUser(body.data);
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -96,6 +103,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         register,
         logout,
+        updateUser,
       }}
     >
       {children}
