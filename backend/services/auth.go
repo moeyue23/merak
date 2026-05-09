@@ -199,6 +199,49 @@ func (s *AuthService) ListUsers(db *gorm.DB) ([]models.User, error) {
 	return users, nil
 }
 
+func (s *AuthService) UpdateUser(db *gorm.DB, userID, username, email string) (*models.User, error) {
+	parsed, err := strconv.ParseUint(userID, 10, 64)
+	if err != nil {
+		return nil, ErrUserNotFound
+	}
+
+	var user models.User
+	if err := db.First(&user, parsed).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, ErrUserNotFound
+		}
+		return nil, err
+	}
+
+	if username != "" {
+		var count int64
+		if err := db.Model(&models.User{}).Where("username = ? AND id != ?", username, user.ID).Count(&count).Error; err != nil {
+			return nil, err
+		}
+		if count > 0 {
+			return nil, ErrUsernameExists
+		}
+		user.Username = username
+	}
+
+	if email != "" {
+		var count int64
+		if err := db.Model(&models.User{}).Where("email = ? AND id != ?", email, user.ID).Count(&count).Error; err != nil {
+			return nil, err
+		}
+		if count > 0 {
+			return nil, ErrEmailExists
+		}
+		user.Email = email
+	}
+
+	if err := db.Save(&user).Error; err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
 func (s *AuthService) Logout(db *gorm.DB, accessToken string) error {
 	claims, err := s.VerifyAccessToken(db, accessToken)
 	if err != nil {

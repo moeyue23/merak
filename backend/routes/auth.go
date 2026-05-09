@@ -46,6 +46,11 @@ type usersListResponse struct {
 	Users []userResponse `json:"users"`
 }
 
+type updateMeRequest struct {
+	Username string `json:"username"`
+	Email    string `json:"email"`
+}
+
 func RegisterAuthRoutes(r chi.Router, authService *services.AuthService) {
 	r.Route("/auth", func(r chi.Router) {
 		r.Post("/register", registerHandler(authService))
@@ -53,6 +58,7 @@ func RegisterAuthRoutes(r chi.Router, authService *services.AuthService) {
 		r.Post("/refresh", refreshHandler(authService))
 		r.Post("/logout", logoutHandler(authService))
 		r.Get("/me", meHandler(authService))
+		r.Put("/me", updateMeHandler(authService))
 		r.Get("/users", listUsersHandler(authService))
 	})
 }
@@ -143,6 +149,36 @@ func meHandler(auth *services.AuthService) http.HandlerFunc {
 		}
 
 		user, err := auth.GetUser(db.DB, claims.Sub)
+		if err != nil {
+			writeAuthError(w, err)
+			return
+		}
+
+		writeJSON(w, http.StatusOK, common.OkResponse(toUserResponse(user)))
+	}
+}
+
+func updateMeHandler(auth *services.AuthService) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		token, err := extractBearerToken(r)
+		if err != nil {
+			writeError(w, http.StatusUnauthorized, common.NewErrorResponse(common.CODE_TOKEN_INVALID, err.Error()))
+			return
+		}
+
+		claims, err := auth.VerifyAccessToken(db.DB, token)
+		if err != nil {
+			writeAuthError(w, err)
+			return
+		}
+
+		var req updateMeRequest
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			writeError(w, http.StatusBadRequest, common.NewErrorResponse(common.CODE_INTERNAL_ERROR, "invalid request payload"))
+			return
+		}
+
+		user, err := auth.UpdateUser(db.DB, claims.Sub, req.Username, req.Email)
 		if err != nil {
 			writeAuthError(w, err)
 			return
