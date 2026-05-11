@@ -27,11 +27,23 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Briefcase, ChevronDownIcon, CircleDot, Inbox, LogOut, User, Users } from 'lucide-react';
+import {
+  Briefcase,
+  ChevronDownIcon,
+  CircleDot,
+  Inbox,
+  LogOut,
+  Plus,
+  User,
+  Users,
+} from 'lucide-react';
 import { SearchCommand } from '@/components/search-command';
+import { client } from '@/client/client.gen';
 import { useState, useRef, useEffect } from 'react';
-import { NavLink } from 'react-router';
+import { NavLink, useRevalidator, useRouteLoaderData } from 'react-router';
 import { useAuth } from '@/models/auth-context';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 interface SortableSubItemProps {
   item: {
@@ -163,10 +175,38 @@ export function AppSidebar() {
     { id: 'views', label: 'Views', href: '/app/workspace/views' },
   ]);
   const moreItem = { id: 'more', label: 'More', href: '/app/workspace/more' };
-  const [teamsItems, setTeamsItems] = useState([
-    { id: 'engineering', label: 'Engineering', href: '/app/teams/engineering' },
-    { id: 'private-team', label: 'Private team', href: '/app/teams/private-team' },
-  ]);
+  const [showCreateTeam, setShowCreateTeam] = useState(false);
+  const layoutTeams =
+    (useRouteLoaderData('layout') as { id: number; name: string }[] | undefined) ?? [];
+
+  const [teamsItems, setTeamsItems] = useState<{ id: string; label: string; href: string }[]>([]);
+
+  useEffect(() => {
+    setTeamsItems(
+      layoutTeams.map(t => ({
+        id: String(t.id),
+        label: t.name,
+        href: `/app/teams/${t.id}`,
+      }))
+    );
+  }, [layoutTeams]);
+
+  const revalidator = useRevalidator();
+
+  const handleCreateTeam = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    try {
+      await client.instance.post('/teams', {
+        name: fd.get('name'),
+        description: fd.get('description'),
+      });
+      setShowCreateTeam(false);
+      revalidator.revalidate();
+    } catch {
+      // Silently fail — form submission doesn't need error UI for V1
+    }
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -273,8 +313,26 @@ export function AppSidebar() {
                 <SidebarMenuButton className="w-full">
                   <Users className="h-4 w-4" />
                   <span>Teams</span>
+                  <span
+                    onClick={e => {
+                      e.stopPropagation();
+                      setShowCreateTeam(true);
+                    }}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.stopPropagation();
+                        setShowCreateTeam(true);
+                      }
+                    }}
+                    className="ml-1 p-0.5 rounded hover:bg-accent cursor-pointer"
+                    title="Create team"
+                    role="button"
+                    tabIndex={0}
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                  </span>
                   <ChevronDownIcon
-                    className={`ml-auto transition-transform ${teamsOpen ? 'rotate-180' : ''}`}
+                    className={`transition-transform ${teamsOpen ? 'rotate-180' : ''}`}
                   />
                 </SidebarMenuButton>
               }
@@ -324,6 +382,47 @@ export function AppSidebar() {
           </span>
         </SidebarMenuButton>
       </SidebarFooter>
+
+      {/* Create team modal */}
+      {showCreateTeam && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+          onClick={() => setShowCreateTeam(false)}
+        >
+          <div
+            className="bg-card rounded-xl p-6 w-full max-w-sm mx-4 ring-1 ring-foreground/10"
+            onClick={e => e.stopPropagation()}
+          >
+            <h3 className="text-lg font-semibold mb-4">Create Team</h3>
+            <form onSubmit={handleCreateTeam} className="space-y-4">
+              <div>
+                <label htmlFor="team-name" className="text-sm font-medium mb-1 block">
+                  Name
+                </label>
+                <Input id="team-name" name="name" placeholder="Team name" required autoFocus />
+              </div>
+              <div>
+                <label htmlFor="team-desc" className="text-sm font-medium mb-1 block">
+                  Description
+                </label>
+                <textarea
+                  id="team-desc"
+                  name="description"
+                  placeholder="Brief description"
+                  rows={3}
+                  className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-none"
+                />
+              </div>
+              <div className="flex justify-end gap-3 pt-2">
+                <Button type="button" variant="outline" onClick={() => setShowCreateTeam(false)}>
+                  Cancel
+                </Button>
+                <Button type="submit">Create</Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </Sidebar>
   );
 }

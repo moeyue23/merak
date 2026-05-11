@@ -6,15 +6,14 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 
-import AppLayout from '@/layouts/layout';
+import AppLayout, { loader as layoutLoader } from '@/layouts/layout';
 import Landing from '@/pages';
 import InboxPage, { loader as inboxLoader, action as inboxAction } from '@/pages/app/inbox';
 import MyIssuesPage, {
   loader as myIssuesLoader,
   action as myIssuesAction,
 } from '@/pages/app/my-issues';
-import EngineeringPage from '@/pages/app/teams/engineering';
-import PrivateTeamPage from '@/pages/app/teams/private-team';
+import TeamDetailPage, { loader as teamLoader, action as teamAction } from '@/pages/app/teams/team';
 import WorkspaceMorePage from '@/pages/app/workspace/more';
 import WorkspaceProjectsPage, {
   loader as projectsLoader,
@@ -41,6 +40,8 @@ const router = createBrowserRouter([
   },
   {
     path: '/app',
+    id: 'layout',
+    loader: layoutLoader,
     element: <AppLayout />,
     children: [
       { path: 'inbox', loader: inboxLoader, action: inboxAction, element: <InboxPage /> },
@@ -60,8 +61,7 @@ const router = createBrowserRouter([
       { path: 'workspace/views', element: <WorkspaceViewsPage /> },
       { path: 'workspace/members', element: <WorkspaceMembersPage /> },
       { path: 'workspace/more', element: <WorkspaceMorePage /> },
-      { path: 'teams/engineering', element: <EngineeringPage /> },
-      { path: 'teams/private-team', element: <PrivateTeamPage /> },
+      { path: 'teams/:id', loader: teamLoader, action: teamAction, element: <TeamDetailPage /> },
     ],
   },
 ]);
