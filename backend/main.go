@@ -25,6 +25,7 @@ func main() {
 	inboxService := services.NewInboxService()
 	projectService := services.NewProjectService()
 	issueService := services.NewIssueService()
+	teamService := services.NewTeamService()
 
 	router := chi.NewRouter()
 
@@ -44,6 +45,7 @@ func main() {
 	routes.RegisterInboxRoutes(router, inboxService, authService)
 	routes.RegisterProjectRoutes(router, projectService, authService)
 	routes.RegisterIssueRoutes(router, issueService, authService)
+	routes.RegisterTeamRoutes(router, teamService, authService)
 
 	port := os.Getenv("PORT")
 	if port == "" {
