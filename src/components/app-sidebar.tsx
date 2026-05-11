@@ -28,6 +28,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Briefcase, ChevronDownIcon, CircleDot, Inbox, LogOut, User, Users } from 'lucide-react';
+import { SearchCommand } from '@/components/search-command';
 import { useState, useRef, useEffect } from 'react';
 import { NavLink } from 'react-router';
 import { useAuth } from '@/models/auth-context';
@@ -195,6 +196,9 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader>
         <div className="px-4 py-3 text-lg font-semibold">Merak</div>
+        <div className="px-2 pb-2">
+          <SearchCommand />
+        </div>
       </SidebarHeader>
 
       <SidebarContent className="gap-4">
