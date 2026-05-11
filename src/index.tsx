@@ -9,7 +9,10 @@ import { createBrowserRouter, RouterProvider } from 'react-router';
 import AppLayout from '@/layouts/layout';
 import Landing from '@/pages';
 import InboxPage, { loader as inboxLoader, action as inboxAction } from '@/pages/app/inbox';
-import MyIssuesPage from '@/pages/app/my-issues';
+import MyIssuesPage, {
+  loader as myIssuesLoader,
+  action as myIssuesAction,
+} from '@/pages/app/my-issues';
 import EngineeringPage from '@/pages/app/teams/engineering';
 import PrivateTeamPage from '@/pages/app/teams/private-team';
 import WorkspaceMorePage from '@/pages/app/workspace/more';
@@ -41,7 +44,12 @@ const router = createBrowserRouter([
     element: <AppLayout />,
     children: [
       { path: 'inbox', loader: inboxLoader, action: inboxAction, element: <InboxPage /> },
-      { path: 'my-issues', element: <MyIssuesPage /> },
+      {
+        path: 'my-issues',
+        loader: myIssuesLoader,
+        action: myIssuesAction,
+        element: <MyIssuesPage />,
+      },
       { path: 'workspace/initiatives', element: <WorkspaceInitiativesPage /> },
       {
         path: 'workspace/projects',

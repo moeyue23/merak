@@ -1,7 +1,8 @@
 import { client } from '@/client/client.gen';
 import { useState } from 'react';
 import { useLoaderData, useFetcher, type ActionFunctionArgs } from 'react-router';
-import { Inbox, Mail, MailOpen, Trash2, Clock, Loader2 } from 'lucide-react';
+import { Mail, MailOpen, Trash2, Clock, Loader2, Inbox } from 'lucide-react';
+import { timeAgo } from '@/lib/time';
 
 interface InboxMessage {
   id: number;
@@ -35,19 +36,6 @@ export async function action({ request }: ActionFunctionArgs) {
     return { ok: false };
   }
   return { ok: true };
-}
-
-function timeAgo(dateStr: string) {
-  const date = new Date(dateStr);
-  const now = new Date();
-  const diff = now.getTime() - date.getTime();
-  const hours = Math.floor(diff / 3600000);
-
-  if (hours < 1) return 'Just now';
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  if (days < 7) return `${days}d ago`;
-  return date.toLocaleDateString();
 }
 
 export default function InboxPage() {
