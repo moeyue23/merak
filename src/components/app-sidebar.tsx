@@ -201,9 +201,8 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <NavLink to="/app/inbox" className="flex items-center gap-2">
+              <NavLink to="/app/inbox" className="flex w-full items-center gap-2">
                 <Inbox className="h-4 w-4" />
-
                 <span>Inbox</span>
               </NavLink>
             </SidebarMenuButton>
@@ -211,7 +210,7 @@ export function AppSidebar() {
 
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <NavLink to="/app/my-issues" className="flex items-center gap-2">
+              <NavLink to="/app/my-issues" className="flex w-full items-center gap-2">
                 <CircleDot className="h-4 w-4" />
                 <span>My issues</span>
               </NavLink>

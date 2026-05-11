@@ -8,12 +8,15 @@ import { createBrowserRouter, RouterProvider } from 'react-router';
 
 import AppLayout from '@/layouts/layout';
 import Landing from '@/pages';
-import InboxPage from '@/pages/app/inbox';
+import InboxPage, { loader as inboxLoader, action as inboxAction } from '@/pages/app/inbox';
 import MyIssuesPage from '@/pages/app/my-issues';
 import EngineeringPage from '@/pages/app/teams/engineering';
 import PrivateTeamPage from '@/pages/app/teams/private-team';
 import WorkspaceMorePage from '@/pages/app/workspace/more';
-import WorkspaceProjectsPage from '@/pages/app/workspace/projects';
+import WorkspaceProjectsPage, {
+  loader as projectsLoader,
+  action as projectsAction,
+} from '@/pages/app/workspace/projects';
 import WorkspaceViewsPage from '@/pages/app/workspace/views';
 import Login from '@/pages/login';
 import Register from '@/pages/register';
@@ -37,10 +40,15 @@ const router = createBrowserRouter([
     path: '/app',
     element: <AppLayout />,
     children: [
-      { path: 'inbox', element: <InboxPage /> },
+      { path: 'inbox', loader: inboxLoader, action: inboxAction, element: <InboxPage /> },
       { path: 'my-issues', element: <MyIssuesPage /> },
       { path: 'workspace/initiatives', element: <WorkspaceInitiativesPage /> },
-      { path: 'workspace/projects', element: <WorkspaceProjectsPage /> },
+      {
+        path: 'workspace/projects',
+        loader: projectsLoader,
+        action: projectsAction,
+        element: <WorkspaceProjectsPage />,
+      },
       { path: 'workspace/views', element: <WorkspaceViewsPage /> },
       { path: 'workspace/members', element: <WorkspaceMembersPage /> },
       { path: 'workspace/more', element: <WorkspaceMorePage /> },
