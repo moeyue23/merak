@@ -22,6 +22,8 @@ func main() {
 	jwtService := services.NewJwtServiceFromEnv()
 	passwordService := services.NewPasswordService()
 	authService := services.NewAuthService(jwtService, passwordService, services.NewSessionService())
+	inboxService := services.NewInboxService()
+	projectService := services.NewProjectService()
 
 	router := chi.NewRouter()
 
@@ -38,6 +40,8 @@ func main() {
 		_, _ = w.Write([]byte("ok"))
 	})
 	routes.RegisterAuthRoutes(router, authService)
+	routes.RegisterInboxRoutes(router, inboxService, authService)
+	routes.RegisterProjectRoutes(router, projectService, authService)
 
 	port := os.Getenv("PORT")
 	if port == "" {
