@@ -306,9 +306,18 @@ export function AppSidebar() {
             username={user?.username ?? 'Guest'}
             onSave={name => updateUser({ username: name })}
           />
-          <button onClick={logout} className="ml-auto cursor-pointer shrink-0" title="Log out">
+          <span
+            onClick={logout}
+            className="ml-auto cursor-pointer shrink-0"
+            title="Log out"
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => {
+              if (e.key === 'Enter' || e.key === ' ') logout();
+            }}
+          >
             <LogOut className="h-4 w-4" />
-          </button>
+          </span>
         </SidebarMenuButton>
       </SidebarFooter>
     </Sidebar>
